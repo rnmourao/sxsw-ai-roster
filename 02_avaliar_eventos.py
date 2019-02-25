@@ -175,9 +175,17 @@ preditos.head()
 df4 = df.merge(preditos, on='id')
 df4.head()
 
+#%% remover mentoria
+for ix, linha in df4.iterrows():
+    incluir = []
+    if 'Ment' not in linha['evento']:
+        incluir.append(ix)
+df5 = df4.iloc[incluir]
+
+#%%
+df5.to_csv('dados/eventos_prioridade.csv', index=False, sep="|")
+
+
 
 
 #%%
-df4.to_csv('dados/eventos_prioridade.csv', index=False, sep="|")
-
-
