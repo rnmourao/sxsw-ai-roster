@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
-nltk.download('stopwords')
+# nltk.download('stopwords')
 
 
 #%%
@@ -40,8 +40,11 @@ class Pre_Pro_01(BaseEstimator, TransformerMixin):
         # efetuar limpeza do texto
         df['texto'] = df.apply(lambda x : self.limpar_texto(x['texto']), axis=1)
 
+        # criar indicador de mentoria...
+        df['mentoria'] = df.apply(lambda x : 1 if 'Mentor' in x['evento'] else 0, axis=1)
+
         # devolver somente colunas que serao usadas
-        df = df[['id', 'texto', 'target']]
+        df = df[['id', 'texto', 'target', 'mentoria']]
         
         return df
 
@@ -175,17 +178,13 @@ preditos.head()
 df4 = df.merge(preditos, on='id')
 df4.head()
 
-#%% remover mentoria
-for ix, linha in df4.iterrows():
-    incluir = []
-    if 'Ment' not in linha['evento']:
-        incluir.append(ix)
-df5 = df4.iloc[incluir]
-
 #%%
-df5.to_csv('dados/eventos_prioridade.csv', index=False, sep="|")
+df5 = df4[['id', 'evento', 'target', 'prioridade', 
+           'mentoria', 'local', 'endereco', 'data', 
+           'inicio', 'fim', 'latitude', 'longitude']]
+df5.sort_values(by='prioridade', inplace=True)
 
-
+df5.to_csv('dados/eventos_prioridade.csv', index=False, sep='|')
 
 
 #%%
