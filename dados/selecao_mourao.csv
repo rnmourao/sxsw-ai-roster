@@ -1,0 +1,33 @@
+id|evento|target|prioridade|mentoria|local|endereco|data|inicio|fim|latitude|longitude
+1393|Let’s Prototype a Voice-Activated Interface|0.005025125628140704|0.005025125628140704|0|Westin Austin Downtown Continental 2|310 E 5th ST. Austin, TX, EUA|Mar 9, 2019|15:30:00|17:30:00|30.2666201|-97.7403752
+1440|Build a Movie Recommendation Engine in Python|0.01507537688442211|0.01507537688442211|0|Westin Austin Downtown Continental 3|310 E 5th ST. Austin, TX, EUA|Mar 12, 2019|15:30:00|18:00:00|30.2666201|-97.7403752
+1428|Make Your First Android App with Machine Learning|0.02010050251256281|0.02010050251256281|0|Westin Austin Downtown Continental 2|310 E 5th ST. Austin, TX, EUA|Mar 11, 2019|15:30:00|17:30:00|30.2666201|-97.7403752
+1726|Fintech Forward Download|0.02512562814070352|0.02512562814070352|0|Hilton Austin Downtown Austin Taco Project|500 E 4th St. Austin, TX, EUA|Mar 9, 2019|08:30:00|11:00:00|30.2650555|-97.7384697
+1399|Designing APIs for Growth|0.03015075376884422|0.03015075376884422|0|Westin Austin Downtown Continental 3|310 E 5th ST. Austin, TX, EUA|Mar 10, 2019|11:00:00|13:00:00|30.2666201|-97.7403752
+1374|Better Living Through Twitter Apps & APIs|0.035175879396984924|0.035175879396984924|0|Westin Austin Downtown The Gallery Room|310 E 5th ST. Austin, TX, EUA|Mar 8, 2019|15:30:00|17:00:00|30.2666201|-97.7403752
+86|Making the Most of Your First SXSW|0.055276381909547735|0.055276381909547735|0|Austin Convention Center Room 16AB|500 E Cesar Chavez Austin, TX, EUA|Mar 8, 2019|17:00:00|18:00:00|30.2642649|-97.7392938
+1700|SXSW Release It: Session 1|0.06532663316582915|0.06532663316582915|0|Hilton Austin Downtown Salon C|500 E 4th St. Austin, TX, EUA|Mar 8, 2019|11:00:00|12:00:00|30.2650555|-97.7384697
+439|Mike Boris (Jaded Melody): Demo Listening Session||0.0914572864321608|0|Austin Convention Center Room 17B|500 E Cesar Chavez Austin, TX, EUA|Mar 14, 2019|14:00:00|15:15:00|30.2642649|-97.7392938
+350|Dan Silver (Riptide Music Group): Demo Listening Session||0.10452261306532663|0|Austin Convention Center Room 17B|500 E Cesar Chavez Austin, TX, EUA|Mar 13, 2019|15:30:00|16:45:00|30.2642649|-97.7392938
+1487|How AI is Changing Advertising in China|0.10552763819095476|0.10552763819095476|0|Fairmont Congressional A|101 Red River. Austin, TX, EUA|Mar 9, 2019|11:00:00|12:00:00|30.26204559999999|-97.7381328
+636|Making Games: It Doesn’t Get Any Easier||0.10753768844221104|0|Austin Convention Center Room 8C|500 E Cesar Chavez Austin, TX, EUA|Mar 15, 2019|17:00:00|18:00:00|30.2642649|-97.7392938
+2099|DevOps: The Innovation Pressure Cooker||0.10954773869346733|0|Courtyard Marriott Rio Grande Ballroom|300 E 4th St. Austin, TX, EUA|Mar 11, 2019|14:00:00|15:00:00|30.2655533|-97.7402274
+610|Maria Gironas (YouTube): Demo Listening Session||0.11055276381909547|0|Austin Convention Center Room 17B|500 E Cesar Chavez Austin, TX, EUA|Mar 15, 2019|15:30:00|16:45:00|30.2642649|-97.7392938
+179|ABC's of Independent Film Financing and Distribution||0.11708542713567838|0|Austin Convention Center Austin Suite|500 E Cesar Chavez Austin, TX, EUA|Mar 10, 2019|15:30:00|17:30:00|30.2642649|-97.7392938
+715|Journey from Student to Live Music Professional||0.1261306532663317|0|Austin Convention Center Room 13AB|500 E Cesar Chavez Austin, TX, EUA|Mar 16, 2019|14:00:00|15:00:00|30.2642649|-97.7392938
+338|Nicole Sanzio (Indigi Music): Demo Listening Session||0.13115577889447236|0|Austin Convention Center Room 17B|500 E Cesar Chavez Austin, TX, EUA|Mar 13, 2019|14:00:00|15:15:00|30.2642649|-97.7392938
+1849|Turning the Tables: Entrepreneur to Investor||0.1321608040201005|0|Hilton Austin Downtown Salon E|500 E 4th St. Austin, TX, EUA|Mar 11, 2019|11:00:00|12:00:00|30.2650555|-97.7384697
+177|The State of Boutique Streaming Services||0.13467336683417086|0|Austin Convention Center Room 12AB|500 E Cesar Chavez Austin, TX, EUA|Mar 10, 2019|14:00:00|15:00:00|30.2642649|-97.7392938
+1620|"Morphing into the Future: ""Shapeshifter"" Materials"||0.13517587939698492|0|Fairmont Manchester EFG|101 Red River. Austin, TX, EUA|Mar 12, 2019|09:30:00|10:30:00|30.26204559999999|-97.7381328
+1896|Six Secrets to Building Startups: Lessons From 60+ Countries||0.13517587939698494|0|Hilton Austin Downtown Salon C|500 E 4th St. Austin, TX, EUA|Mar 12, 2019|11:00:00|12:00:00|30.2650555|-97.7384697
+942|Coffee Connect ||0.13567839195979894|0|JW Marriott 2nd Floor Prefunction|110 E 2nd St. Austin, TX, EUA|Mar 10, 2019|10:00:00|11:00:00|30.2645713|-97.74319799999999
+453|Daren Searcy (ReverbNation): Demo Listening Session||0.14221105527638184|0|Austin Convention Center Room 17B|500 E Cesar Chavez Austin, TX, EUA|Mar 14, 2019|15:30:00|16:45:00|30.2642649|-97.7392938
+299|SXSW Trade Show||0.14221105527638192|0|Austin Convention Center Trade Show - Exhibit Halls 2, 3 & 4 |500 E Cesar Chavez Austin, TX, EUA|Mar 13, 2019|11:00:00|14:00:00|30.2642649|-97.7392938
+753|SXSW Gaming Expo Happy Hour||0.14321608040201006|0|Austin Convention Center Exhibit Hall 2|500 E Cesar Chavez Austin, TX, EUA|Mar 16, 2019|17:00:00|18:00:00|30.2642649|-97.7392938
+1836|Startup Journey as Told By Black and Latinx Women||0.14522613065326634|0|Hilton Austin Downtown Salon E|500 E 4th St. Austin, TX, EUA|Mar 11, 2019|09:30:00|10:30:00|30.2650555|-97.7384697
+1348|Fort Worth Hip Hop Happy Hour||0.1562814070351759|0|Bungalow|92 Rainey St. Austin, TX, EUA|Mar 9, 2019|14:30:00|15:30:00|30.2605012|-97.7383708
+278|Blockchain & Cryptocurrency Ask Me Anything||0.1577889447236181|0|Austin Convention Center Trade Show - Discovery Stage - Exhibit Hall 2|500 E Cesar Chavez Austin, TX, EUA|Mar 12, 2019|14:00:00|15:00:00|30.2642649|-97.7392938
+1657|Yoga: Mindful Movement, Loving Sound||0.17185929648241208|0|Fairmont Wisteria Room|101 Red River. Austin, TX, EUA|Mar 13, 2019|09:30:00|10:30:00|30.26204559999999|-97.7381328
+779|Super Street Fighter 2 Turbo Tournament||0.2030150753768844|0|Austin Convention Center Exhibit Hall 1|500 E Cesar Chavez Austin, TX, EUA|Mar 17, 2019|16:00:00|18:00:00|30.2642649|-97.7392938
+51|House of Scandinavia||0.2221105527638191|0|Fareground|111 Congress Suite 700. Austin, TX, EUA|Mar 8, 2019|08:00:00|00:00:00|30.2635186|-97.74358
+777|The Psychology of The Legend of Zelda||0.4175879396984925|0|Austin Convention Center Gaming Expo - Discovery Stage - Exhibit Hall 2|500 E Cesar Chavez Austin, TX, EUA|Mar 17, 2019|14:30:00|15:30:00|30.2642649|-97.7392938

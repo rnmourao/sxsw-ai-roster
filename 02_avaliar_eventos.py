@@ -116,7 +116,7 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
 #%%
 # recuperar arquivo xlsx
-df = pd.read_excel('dados/eventos.xlsx', index_col=None)
+df = pd.read_excel('dados/eventos_maurilio.xlsx', index_col=None)
 
 #%%
 # preparacao da variavel target e do texto
@@ -184,7 +184,7 @@ df5 = df4[['id', 'evento', 'target', 'prioridade',
            'inicio', 'fim', 'latitude', 'longitude']]
 df5.sort_values(by='prioridade', inplace=True)
 
-df5.to_csv('dados/eventos_prioridade.csv', index=False, sep='|')
+df5.to_csv('dados/eventos_prioridade_maurilio.csv', index=False, sep='|')
 
 
 #%%
