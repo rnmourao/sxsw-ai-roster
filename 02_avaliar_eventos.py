@@ -40,11 +40,8 @@ class Pre_Pro_01(BaseEstimator, TransformerMixin):
         # efetuar limpeza do texto
         df['texto'] = df.apply(lambda x : self.limpar_texto(x['texto']), axis=1)
 
-        # criar indicador de mentoria...
-        df['mentoria'] = df.apply(lambda x : 1 if 'Mentor' in x['evento'] else 0, axis=1)
-
         # devolver somente colunas que serao usadas
-        df = df[['id', 'texto', 'target', 'mentoria']]
+        df = df[['id', 'texto', 'target']]
         
         return df
 
@@ -113,10 +110,15 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
         return df
 
+#%%
+# Constantes
+ENTRADA = 'eventos_mourao.xlsx'
+SAIDA = 'prioridade_mourao.csv'
+
 
 #%%
 # recuperar arquivo xlsx
-df = pd.read_excel('dados/eventos_maurilio.xlsx', index_col=None)
+df = pd.read_excel('dados/' + ENTRADA, index_col=None)
 
 #%%
 # preparacao da variavel target e do texto
@@ -147,7 +149,7 @@ len(base)
 treino, teste = train_test_split(base, random_state=2019)
 
 #%%
-regr = RandomForestRegressor(n_estimators=10, random_state=2019)
+regr = RandomForestRegressor(n_estimators=3, random_state=2019)
 regr.fit(treino[explicativas], treino['target'])
 
 #%%
@@ -179,12 +181,11 @@ df4 = df.merge(preditos, on='id')
 df4.head()
 
 #%%
-df5 = df4[['id', 'evento', 'target', 'prioridade', 
-           'mentoria', 'local', 'endereco', 'data', 
-           'inicio', 'fim', 'latitude', 'longitude']]
+df5 = df4[['id', 'evento', 'target', 'prioridade', 'acesso', 'mentoria', 'local', 
+           'endereco', 'dia', 'inicio', 'fim', 'latitude', 'longitude']]
 df5.sort_values(by='prioridade', inplace=True)
 
-df5.to_csv('dados/eventos_prioridade_maurilio.csv', index=False, sep='|')
+df5.to_csv('dados/' + SAIDA, index=False, sep='|')
 
 
 #%%

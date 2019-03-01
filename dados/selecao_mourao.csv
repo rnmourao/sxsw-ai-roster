@@ -1,0 +1,37 @@
+id|evento|target|prioridade|acesso|mentoria|local|endereco|dia|inicio|fim|latitude|longitude
+1743|Let’s Prototype a Voice-Activated Interface|0.040816326530612235|0.040816326530612235|1.0|False|Westin Austin Downtown Continental 2|310 E 5th ST. Austin, TX, EUA|9|15:30:00|17:30:00|30.2666201|-97.7403752
+1786|Making Daily Song Plays Datasets For Music Labels|0.061224489795918366|0.061224489795918366|1.0|False|Westin Austin Downtown Continental 3|310 E 5th ST. Austin, TX, EUA|12|09:30:00|12:30:00|30.2666201|-97.7403752
+1779|Make Your First Android App with Machine Learning|0.08163265306122447|0.08163265306122447|1.0|False|Westin Austin Downtown Continental 2|310 E 5th ST. Austin, TX, EUA|11|15:30:00|17:30:00|30.2666201|-97.7403752
+1724|Better Living Through Twitter Apps & APIs|0.1020408163265306|0.1020408163265306|1.0|False|Westin Austin Downtown The Gallery Room|310 E 5th ST. Austin, TX, EUA|8|15:30:00|17:00:00|30.2666201|-97.7403752
+1734|Prototyping for IoT with Arduino|0.12244897959183673|0.12244897959183673|1.0|False|Westin Austin Downtown Continental 1|310 E 5th ST. Austin, TX, EUA|9|09:30:00|11:00:00|30.2666201|-97.7403752
+1767|Use Computer Code to Grow a Farm|0.14285714285714285|0.14285714285714285|1.0|False|Westin Austin Downtown Continental 2|310 E 5th ST. Austin, TX, EUA|11|09:30:00|12:30:00|30.2666201|-97.7403752
+3623|Intro to Javascript||0.19727891156462585|1.0|False|Palmer Events Center Room 1-2|900 Barton Springs Rd. Austin, TX, EUA|9|14:00:00|15:00:00|30.2606889|-97.7527899
+1084|SXSW Art Program Presents Belongings by John-Paul Marin, Matt Smith, Patrick Abboud, Tea Uglow, Kirstin Sillitoe ||0.20408163265306126|1.0|False|JW Marriott Room 403|110 E 2nd St. Austin, TX, EUA|8|09:30:00|18:00:00|30.2645713|-97.74319799999999
+1276|SXSW Art Program Presents Belongings by John-Paul Marin, Matt Smith, Patrick Abboud, Tea Uglow, Kirstin Sillitoe ||0.20408163265306126|1.0|False|JW Marriott Room 403|110 E 2nd St. Austin, TX, EUA|10|11:00:00|18:00:00|30.2645713|-97.74319799999999
+1616|SXSW Art Program Presents Belongings by John-Paul Marin, Matt Smith, Patrick Abboud, Tea Uglow, Kirstin Sillitoe ||0.20408163265306126|1.0|False|JW Marriott Room 403|110 E 2nd St. Austin, TX, EUA|13|11:00:00|18:00:00|30.2645713|-97.74319799999999
+2129|SXSW Art Program Presents Blooming by Lisa Park ||0.20408163265306126|1.0|False|Hilton Austin Downtown Room 410|500 E 4th St. Austin, TX, EUA|9|11:00:00|18:00:00|30.2650555|-97.7384697
+3796|FACEBOOK ART HOUSE SCREEN PRINTING WORKSHOP||0.20408163265306126|1.0|False|Native Event Space|807 E 4th St Austin, TX, EUA|10|15:00:00|17:00:00|30.2635083|-97.7346683
+2398|The Future of AI in Blockchain||0.20408163265306126|1.0|False|Hilton Austin Downtown Salon K|500 E 4th St. Austin, TX, EUA|14|15:30:00|16:30:00|30.2650555|-97.7384697
+3800|Rolling Stone Live: Austin at SXSW||0.20408163265306126|1.0|False|Native Event Space|807 E 4th St Austin, TX, EUA|14|16:30:00|19:00:00|30.2635083|-97.7346683
+2099|A City-Led Approach to Crime & Violence Prevention||0.23809523809523805|1.0|False|Hilton Austin Downtown Room 400-402|500 E 4th St. Austin, TX, EUA|8|17:00:00|17:15:00|30.2650555|-97.7384697
+2433|Spain & Latin America Music Meet Up||0.25170068027210885|1.0|False|Hilton Austin Downtown Room 404|500 E 4th St. Austin, TX, EUA|15|14:00:00|15:00:00|30.2650555|-97.7384697
+1801|Create Your Own Bitcoin with Black Girls CODE! - Group 1||0.2585034013605442|1.0|False|Westin Austin Downtown Paramount 2|310 E 5th ST. Austin, TX, EUA|13|14:30:00|16:00:00|30.2666201|-97.7403752
+797|Bringing Esports to Sports||0.2585034013605442|1.0|False|Austin Convention Center Room 9AB|500 E Cesar Chavez Austin, TX, EUA|15|15:30:00|16:30:00|30.2642649|-97.7392938
+1804|Create Your Own Bitcoin with Black Girls CODE! - Group 2||0.2585034013605442|1.0|False|Westin Austin Downtown Paramount 2|310 E 5th ST. Austin, TX, EUA|13|16:30:00|18:00:00|30.2666201|-97.7403752
+695|Indie Corner||0.2653061224489796|1.0|False|Austin Convention Center Exhibit Hall 2|500 E Cesar Chavez Austin, TX, EUA|15|11:00:00|18:00:00|30.2642649|-97.7392938
+434|Chip Conley Book Signing||0.2653061224489796|1.0|False|Austin Convention Center Level 3 Atrium Landing|500 E Cesar Chavez Austin, TX, EUA|12|16:30:00|17:00:00|30.2642649|-97.7392938
+3028|SXSW Film Industry Happy Hour hosted by Pilgrim Media Group & YouTube Originals ||0.2653061224489796|1.0|False|Stephen F Austin|701 Congress Ave. Austin, TX, EUA|12|17:00:00|19:00:00|30.2690545|-97.7419885
+960|Dr. Julian Hosp Book Signing||0.2653061224489796|1.0|False|Austin Convention Center Level 3 Atrium Landing|500 E Cesar Chavez Austin, TX, EUA|16|15:00:00|16:00:00|30.2642649|-97.7392938
+983|Mortal Kombat II Tournament||0.2653061224489796|1.0|False|Austin Convention Center Exhibit Hall 1|500 E Cesar Chavez Austin, TX, EUA|16|16:00:00|18:00:00|30.2642649|-97.7392938
+2736|EU@SXSW 2019||0.2653061224489796|1.0|False|Palm Door on Sixth|508 E 6th St. Austin, TX, EUA|11|11:00:00|02:00:00|30.2669107|-97.7377236
+347|Douglas Rushkoff Book Signing||0.2653061224489796|1.0|False|Austin Convention Center Level 3 Atrium Landing|500 E Cesar Chavez Austin, TX, EUA|11|14:00:00|15:00:00|30.2642649|-97.7392938
+3517|The British Music Embassy||0.272108843537415|1.0|False|Latitude 30|512 San Jacinto Blvd. Austin, TX, EUA|14|10:00:00|18:00:00|30.2670696|-97.7407154
+3633|Creating a Knockout LinkedIn & Resume||0.2857142857142857|1.0|False|Palmer Events Center Room 4-5|900 Barton Springs Rd. Austin, TX, EUA|10|09:30:00|10:30:00|30.2606889|-97.7527899
+2032|Yoga: Mindful Movement, Loving Sound||0.3333333333333333|1.0|False|Fairmont Wisteria Room|101 Red River. Austin, TX, EUA|13|09:30:00|10:30:00|30.26204559999999|-97.7381328
+2958|SXSW Film Industry Happy Hour hosted by Vudu ||0.3333333333333333|1.0|False|Stephen F Austin|701 Congress Ave. Austin, TX, EUA|10|17:00:00|19:00:00|30.2690545|-97.7419885
+87|The Sweatlife House||0.36734693877551017|1.0|False|Clive Bar|609 Davis St. Austin, TX, EUA|8|08:00:00|02:00:00|30.260031400000006|-97.7385511
+1015|Red Dragon Inn Tournament||0.4081632653061225|1.0|False|Austin Convention Center Exhibit Hall 2|500 E Cesar Chavez Austin, TX, EUA|17|15:00:00|17:00:00|30.2642649|-97.7392938
+3601|SXSW Gaming Cosplay Contest||0.4761904761904762|1.0|False|The Sunset Room|310 E 3rd St. Austin, TX, EUA|17|18:00:00|19:00:00|30.264574|-97.7405032
+1688|Canada House||0.4897959183673469|1.0|False|Bungalow|92 Rainey St. Austin, TX, EUA|12|10:30:00|02:00:00|30.2605012|-97.7383708
+4006|AUSTRALIAHOUSE presented by G'Day USA||0.6938775510204082|1.0|False|Lucille|77 Rainey St. Austin, TX, EUA|15|09:00:00|02:00:00|30.2587207|-97.7385617
+3999|AUSTRALIAHOUSE presented by G'Day USA||0.6938775510204082|1.0|False|Lucille|77 Rainey St. Austin, TX, EUA|14|09:00:00|02:00:00|30.2587207|-97.7385617
