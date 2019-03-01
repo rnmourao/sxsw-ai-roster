@@ -12,9 +12,9 @@ import time
 
 #%%
 # chave de autenticacao do google maps
-with open('.secret', 'r') as f:
-    API_KEY = f.read().strip('\n')
-gmaps = googlemaps.Client(key=API_KEY)
+# with open('.secret', 'r') as f:
+#     API_KEY = f.read().strip('\n')
+# gmaps = googlemaps.Client(key=API_KEY)
 
 #%%
 def recuperar_eventos(url):
@@ -50,7 +50,7 @@ def recuperar_detalhes(url):
     # recupera nome do evento e se eh de mentoria
     try:
         evento = pagina.find('h1', class_='event-name').text
-        mentoria = True if 'Mentor' in evento else False
+        mentoria = 1 if 'Mentor' in evento else 0
     except AttributeError:
         evento = None
 
@@ -94,8 +94,8 @@ def recuperar_detalhes(url):
             ac = verificar_acesso(pagina.find(text=tp[0]).parent.text)
             if ac:
                 acesso = tp[1]
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     return {'evento': evento,
             'dia': dia, 
@@ -151,6 +151,7 @@ def verificar_acesso(txt):
     m = rg.search(txt)
     try:
         p = m.group(1)
+        print(p)
         return True
     except:
         return False
@@ -188,6 +189,11 @@ urls_detalhes = [item for sublista in resultado for item in sublista]
 # recuperar detalhes
 pool = ThreadPool(8)
 resultado = pool.map(recuperar_detalhes, urls_detalhes)
+
+#%%
+# fechar pool e esperar threads finalizarem
+pool.close()
+pool.join()
 
 #%%
 # criar dataframe pandas
