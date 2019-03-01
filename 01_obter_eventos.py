@@ -47,20 +47,20 @@ def recuperar_detalhes(url):
     # retira caracteres especiais repetidos da pagina, web deixando-a mais legivel
     pagina = BeautifulSoup(resposta.text, 'html5lib')
 
-    # recupera nome do evento
+    # recupera nome do evento e se eh de mentoria
     try:
         evento = pagina.find('h1', class_='event-name').text
+        mentoria = True if 'Mentor' in evento else False
     except AttributeError:
         evento = None
 
-
-    # encontra data e horario
+    # encontra dia e horario
     try:
         data_horario = pagina.find('div', class_='event-date').string
-        data = re.search('^.*(?=( \|))', data_horario).group(1)        
+        dia = recuperar_dia(data_horario)
         inicio, fim = recuperar_horarios(data_horario)            
     except AttributeError:
-        data = None
+        dia = None
         inicio = None
         fim = None
 
@@ -77,8 +77,6 @@ def recuperar_detalhes(url):
         endereco = pagina.find('span', 'address').text + ' Austin, TX, EUA'
     except AttributeError:
         endereco = None
-        latitude = None
-        longitude = None
 
     # encontra resumo
     try:
@@ -88,13 +86,40 @@ def recuperar_detalhes(url):
     except AttributeError:
         resumo = None
 
+    # encontra marcacao de interactive badge marca nivel de acesso
+    acesso = 1.0 # evento nao previsto para ingresso
+
+    for tp in [('Secondary Entry:', 0.5), ('Primary Entry:', 0.0)]:    
+        try:
+            ac = verificar_acesso(pagina.find(text=tp[0]).parent.text)
+            if ac:
+                acesso = tp[1]
+        except:
+            pass
+
     return {'evento': evento,
-            'data': data, 
+            'dia': dia, 
             'inicio': inicio, 
             'fim': fim, 
             'local': nome_local, 
             'endereco': endereco, 
-            'resumo': resumo}   
+            'resumo': resumo, 
+            'acesso': acesso,
+            'mentoria' : mentoria}   
+
+
+#%%
+def recuperar_dia(txt):
+    re1='.*?'	# Non-greedy match on filler
+    re2='((?:(?:[0-2]?\\d{1})|(?:[3][01]{1})))(?![\\d])'	
+    rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
+    m = rg.search(txt)
+    try:
+        dia = m.group(1)
+    except:
+        dia = None
+    return dia
+
 
 #%%
 def recuperar_horarios(txt):
@@ -115,6 +140,21 @@ def recuperar_horarios(txt):
         fim = None
 
     return( (inicio, fim) )
+
+
+#%%
+def verificar_acesso(txt):
+    re1='.*?'	# Non-greedy match on filler
+    re2='(Interactive)'	# Word 1
+
+    rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
+    m = rg.search(txt)
+    try:
+        p = m.group(1)
+        return True
+    except:
+        return False
+
 
 #%%
 def recuperar_coordenadas(gmaps, endereco):
@@ -152,6 +192,7 @@ resultado = pool.map(recuperar_detalhes, urls_detalhes)
 #%%
 # criar dataframe pandas
 eventos_pd = pd.DataFrame(resultado)
+eventos_pd.to_csv('dados/eventos.csv', index=True, index_label='id', sep='|')
 
 #%%
 # recuperar enderecos unicos
@@ -173,6 +214,7 @@ for endereco in enderecos:
 
 #%%
 enderecos_pd = pd.DataFrame(ls)
+enderecos_pd.to_csv('dados/enderecos.csv', index=False, sep='|')
 
 #%%
 eventos_pd = eventos_pd.merge(enderecos_pd, on='endereco')
