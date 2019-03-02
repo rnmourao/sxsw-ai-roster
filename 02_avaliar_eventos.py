@@ -112,44 +112,44 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
 
 #%%
-# retirando multicolinearidade
-class Pre_Pro_03(BaseEstimator, TransformerMixin):
-    def __init__(self):
-        self.VIF_THRESHOLD = 5
+# # retirando multicolinearidade
+# class Pre_Pro_03(BaseEstimator, TransformerMixin):
+#     def __init__(self):
+#         self.VIF_THRESHOLD = 5
 
 
-    def fit(self, df, y=None, **fit_params):
-        from sklearn import linear_model
-        from sklearn.metrics import r2_score
+#     def fit(self, df, y=None, **fit_params):
+#         from sklearn import linear_model
+#         from sklearn.metrics import r2_score
 
-        explicativas = [x for x in df.columns if x not in  ['id', 'target']]
+#         explicativas = [x for x in df.columns if x not in  ['id', 'target']]
 
-        regr = linear_model.LinearRegression()
+#         regr = linear_model.LinearRegression()
 
-        self.excluidas = explicativas
-        max_vif = self.VIF_THRESHOLD + 1
-        while max_vif > self.VIF_THRESHOLD:
-            ultimo_vif = 0
+#         self.excluidas = explicativas
+#         max_vif = self.VIF_THRESHOLD + 1
+#         while max_vif > self.VIF_THRESHOLD:
+#             ultimo_vif = 0
             
-            for coluna in self.excluidas:
-                expl_da_vez = [x for x in explicativas if x != coluna]
-                regr.fit(df[expl_da_vez], df[coluna])
-                y_pred = regr.predict(df[expl_da_vez], df[coluna])
-                vif = 1.0 / (1.0 - r2_score(df[coluna], y_pred))
-                if vif > ultimo_vif:
-                    excluir = coluna
-                    ultimo_vif = vif
+#             for coluna in self.excluidas:
+#                 expl_da_vez = [x for x in explicativas if x != coluna]
+#                 regr.fit(df[expl_da_vez], df[coluna])
+#                 y_pred = regr.predict(df[expl_da_vez])
+#                 vif = 1.0 / (1.0 - r2_score(df[coluna], y_pred))
+#                 if vif > ultimo_vif:
+#                     excluir = coluna
+#                     ultimo_vif = vif
             
-            max_vif = ultimo_vif
-            if max_vif > self.VIF_THRESHOLD:
-                self.excluidas.remove(excluir)
+#             max_vif = ultimo_vif
+#             if max_vif > self.VIF_THRESHOLD:
+#                 self.excluidas.remove(excluir)
 
-            print(coluna, max_vif)
-        print(self.excluidas)
+#             print(coluna, max_vif)
+#         print(self.excluidas)
 
 
-    def transform(self, df):
-        return df[self.excluidas]
+#     def transform(self, df):
+#         return df[[x for x in df.columns if x not in self.excluidas]]
 
 
 #%%
@@ -168,8 +168,6 @@ df = pd.read_excel('dados/' + ENTRADA, index_col=None)
 pre_pro_01 = Pre_Pro_01()
 pre_pro_01.fit(df=df)
 df2 = pre_pro_01.transform(df)
-
-#%%
 df2.head()
 
 #%%
@@ -180,15 +178,11 @@ df3 = pre_pro_02.transform(df2)
 df3.head()
 
 #%%
-explicativas = [x for x in df3.columns if x not in ['id', 'target']]
-
-#%%
-# retirar multicolinearidade
-pre_pro_03 = Pre_Pro_03()
-pre_pro_03.fit(df=df3)
-df4 = pre_pro_03.transform(df3)
-df3.head()
-
+# # retirar multicolinearidade
+# pre_pro_03 = Pre_Pro_03()
+# pre_pro_03.fit(df=df3)
+# df4 = pre_pro_03.transform(df3)
+# df4.head()
 
 #%%
 # separar base para criação do modelo
@@ -197,11 +191,15 @@ len(base)
 
 #%%
 ## separar em treino e teste
-treino, teste = train_test_split(base, random_state=2019)
+treino, teste = train_test_split(base, random_state=2019, test_size=.1)
+
+#%%
+explicativas = [x for x in df3.columns if x not in  ['id', 'target']]
 
 #%%
 regr = RandomForestRegressor(n_estimators=3, random_state=2019)
 regr.fit(treino[explicativas], treino['target'])
+
 
 #%%
 regr.score(treino[explicativas], treino['target'])
@@ -238,5 +236,3 @@ df5.sort_values(by='prioridade', inplace=True)
 
 df5.to_csv('dados/' + SAIDA, index=False, sep='|')
 
-
-#%%
