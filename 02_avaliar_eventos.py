@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
-nltk.download('stopwords')
+# nltk.download('stopwords')
 
 
 #%%
@@ -110,6 +110,48 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
         return df
 
+
+#%%
+# retirando multicolinearidade
+class Pre_Pro_03(BaseEstimator, TransformerMixin):
+    def __init__(self):
+        self.VIF_THRESHOLD = 5
+
+
+    def fit(self, df, y=None, **fit_params):
+        from sklearn import linear_model
+        from sklearn.metrics import r2_score
+
+        explicativas = [x for x in df.columns if x not in  ['id', 'target']]
+
+        regr = linear_model.LinearRegression()
+
+        self.excluidas = explicativas
+        max_vif = self.VIF_THRESHOLD + 1
+        while max_vif > self.VIF_THRESHOLD:
+            ultimo_vif = 0
+            
+            for coluna in self.excluidas:
+                expl_da_vez = [x for x in explicativas if x != coluna]
+                regr.fit(df[expl_da_vez], df[coluna])
+                y_pred = regr.predict(df[expl_da_vez], df[coluna])
+                vif = 1.0 / (1.0 - r2_score(df[coluna], y_pred))
+                if vif > ultimo_vif:
+                    excluir = coluna
+                    ultimo_vif = vif
+            
+            max_vif = ultimo_vif
+            if max_vif > self.VIF_THRESHOLD:
+                self.excluidas.remove(excluir)
+
+            print(coluna, max_vif)
+        print(self.excluidas)
+
+
+    def transform(self, df):
+        return df[self.excluidas]
+
+
 #%%
 # Constantes
 ENTRADA = 'eventos_mourao.xlsx'
@@ -119,6 +161,7 @@ SAIDA = 'prioridade_mourao.csv'
 #%%
 # recuperar arquivo xlsx
 df = pd.read_excel('dados/' + ENTRADA, index_col=None)
+
 
 #%%
 # preparacao da variavel target e do texto
@@ -138,6 +181,14 @@ df3.head()
 
 #%%
 explicativas = [x for x in df3.columns if x not in ['id', 'target']]
+
+#%%
+# retirar multicolinearidade
+pre_pro_03 = Pre_Pro_03()
+pre_pro_03.fit(df=df3)
+df4 = pre_pro_03.transform(df3)
+df3.head()
+
 
 #%%
 # separar base para criação do modelo
