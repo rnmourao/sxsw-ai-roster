@@ -231,7 +231,7 @@ df4.head()
 
 #%%
 df5 = df4[['id', 'evento', 'target', 'prioridade', 'acesso', 'mentoria', 'local', 
-           'endereco', 'dia', 'inicio', 'fim', 'latitude', 'longitude']]
+           'endereco', 'dia', 'inicio', 'fim', 'latitude', 'longitude', 'resumo']]
 df5.sort_values(by='prioridade', inplace=True)
 
 df5.to_csv('dados/' + SAIDA, index=False, sep='|')

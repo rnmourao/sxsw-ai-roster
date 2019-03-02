@@ -29,6 +29,7 @@ def max_min(valor, minimo, maximo):
 #%%
 ENTRADA = 'prioridade_mourao.csv'
 SAIDA = 'selecao_mourao.csv'
+SAIDA2 = 'selecao_alternativa_mourao.csv'
 
 #%%
 df = pd.read_csv('dados/' + ENTRADA, sep='|')
@@ -93,6 +94,7 @@ for dia in dias:
             d['mentoria'] = ev_1['mentoria'].values[0] + ev_2['mentoria'].values[0]
             d['distancia'] = math.sqrt( (ev_1['latitude'].values[0]-ev_2['latitude'].values[0])**2 + 
                                    (ev_1['longitude'].values[0]-ev_2['longitude'].values[0])**2 )
+            d['acesso'] = ev_1['acesso'].values[0] + ev_2['acesso'].values[0]
             ls_tudo.append(d)                      
 df_combos = pd.DataFrame(ls_tudo)
 
@@ -109,10 +111,13 @@ max_acesso = df_combos['acesso'].max()
 
 
 #%%
-df_combos['custo'] = df_combos.apply(lambda x : max_min(x['prioridade'], min_prioridade, max_prioridade) + 
-                                                max_min(x['mentoria'], min_mentoria, max_mentoria) * 2.0 +
+df_combos['custo'] = df_combos.apply(lambda x : max_min(x['prioridade'],       
+                                                min_prioridade, max_prioridade) + 
+                                                max_min(x['mentoria'], min_mentoria, max_mentoria) * 2 +
                                                 max_min(x['distancia'], min_distancia, max_distancia) +
-                                                max_min(x['acesso'], min_acesso, max_acesso) * 2.0, axis=1)
+                                                max_min(x['acesso'], 
+                                                min_acesso, max_acesso) * 2, 
+                                     axis=1)
 
 #%%
 df_combos.sort_values(by=['dia', 'turno', 'custo'], inplace=True)
@@ -120,6 +125,16 @@ df_combos.to_csv('dados/' + SAIDA, sep='|', index=False)
 
 #%%
 selecao = df_combos.groupby(by=['dia', 'turno']).first()
+selecao
 
 #%%
 df.loc[df['id'].isin(selecao['evento_1'].tolist() + selecao['evento_2'].tolist())].to_csv('dados/' + SAIDA, sep='|', index=False)
+
+#%%
+# segunda agenda
+fora = list(selecao['evento_1']) + list(selecao['evento_2'])
+selecao2 = df_combos[(~df_combos['evento_1'].isin(fora)) & (~df_combos['evento_2'].isin(fora))].groupby(by=['dia', 'turno']).first()
+selecao2
+
+#%%
+df.loc[df['id'].isin(selecao2['evento_1'].tolist() + selecao2['evento_2'].tolist())].to_csv('dados/' + SAIDA2, sep='|', index=False)
