@@ -12,9 +12,9 @@ import time
 
 #%%
 # chave de autenticacao do google maps
-# with open('.secret', 'r') as f:
-#     API_KEY = f.read().strip('\n')
-# gmaps = googlemaps.Client(key=API_KEY)
+with open('.secret', 'r') as f:
+    API_KEY = f.read().strip('\n')
+gmaps = googlemaps.Client(key=API_KEY)
 
 #%%
 def recuperar_eventos(url):
@@ -91,11 +91,12 @@ def recuperar_detalhes(url):
 
     for tp in [('Secondary Entry:', 0.5), ('Primary Entry:', 0.0)]:    
         try:
-            ac = verificar_acesso(pagina.find(text=tp[0]).parent.text)
+            ac = verificar_acesso(pagina.find(text=tp[0]).parent.parent.text)
             if ac:
                 acesso = tp[1]
-        except Exception as e:
-            print(e)
+                print(tp[0])
+        except:
+            pass
 
     return {'evento': evento,
             'dia': dia, 
@@ -151,7 +152,6 @@ def verificar_acesso(txt):
     m = rg.search(txt)
     try:
         p = m.group(1)
-        print(p)
         return True
     except:
         return False
@@ -201,6 +201,10 @@ eventos_pd = pd.DataFrame(resultado)
 eventos_pd.to_csv('dados/eventos.csv', index=True, index_label='id', sep='|')
 
 #%%
+# eventos_pd = pd.read_csv('dados/eventos.csv', sep='|')
+
+
+#%%
 # recuperar enderecos unicos
 enderecos = list(set(eventos_pd['endereco'].tolist()))
 
@@ -214,7 +218,7 @@ for endereco in enderecos:
         d['latitude'] = lat
         d['longitude'] = lon
         ls.append(d)
-        time.sleep(5)
+        time.sleep(3)
     except:
         pass
 
