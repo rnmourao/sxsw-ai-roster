@@ -37,21 +37,17 @@ def monta_agenda(dia, df, agenda, combos):
 
         sem_choque = df_sem.loc[df_sem['inicio'] > fim ]
         if len(sem_choque) > 0:
-            nova_agenda = monta_agenda(dia, sem_choque, agenda + [id_atual], combos)
-            if nova_agenda:
-                combos.append(nova_agenda)
+            monta_agenda(dia, sem_choque, agenda + [id_atual], combos)
 
         # tratar demais
         com_choque = df_sem.loc[((df_sem['inicio'] >= inicio) & (df_sem['inicio'] <= fim )) | \
                             ((df_sem['fim'] >= inicio) & (df_sem['fim'] <= fim ))]
         if len(com_choque) > 0:
-            nova_agenda = monta_agenda(dia, df_sem, agenda, combos)
-            if nova_agenda:
-                combos.append(nova_agenda)
+            monta_agenda(dia, df_sem, agenda, combos)
 
     else:
         nova_agenda = agenda + [id_atual]
-        return { 'dia' : dia , 'combos' : nova_agenda }
+        combos.append({ 'dia' : dia , 'combos' : nova_agenda })
         
 
 #%% constantes
@@ -105,3 +101,6 @@ df_combos = pd.DataFrame(list(combos))
 #%% 
 df_combos.head()
 len(df_combos)
+
+#%%
+df_combos.to_csv('dados/combos.csv', index=False)
