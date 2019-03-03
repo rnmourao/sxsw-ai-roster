@@ -35,7 +35,7 @@ def monta_agenda(df, dia, agenda):
     id_atual = atual['id'].values[0]
     df = df.loc[df['id'] != id_atual]
 
-    if len(df) > 0 and len(agenda) < 4:
+    if len(df) > 0 and len(agenda) < 2:
         inicio = atual['inicio'].values[0]
         fim = atual['fim'].values[0]
 
@@ -91,6 +91,16 @@ for dia in dias:
     monta_agenda(df, dia, [])
     ls.append({'dia' : dia, 'combos': copy.copy(combos)})
 
+#%%
+combos = []
+for l in ls:
+    ix = 0
+    for c in l['combos']:
+        ix += 1
+        for i in c:
+            combos.append({'dia': l['dia'], 'id': i, 'ix': ix})
+combos_pd = pd.DataFrame(combos)
+combos_pd.to_csv('dados/teste_recursivo.csv', index=False)
 
 #%%
 ls_tudo = []
