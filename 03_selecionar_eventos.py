@@ -7,10 +7,9 @@ import copy
 from multiprocessing.dummy import Pool as ThreadPool
 
 
-
 #%%
 def horario_em_mins(horario):
-    h = str(horario.values[0].strftime("%H:%M:%S")).split(':')
+    h = str(horario.strftime("%H:%M:%S")).split(':')
     m = int(h[0]) * 60 + int(h[1])
     return m
 
@@ -28,7 +27,7 @@ def max_min(valor, minimo, maximo):
         
     return novo_valor
 
-
+#%%
 # monta as combinacoes de agenda recursivamente
 def monta_agenda(df, dia, agenda):
     df = df.loc[df['dia'] == dia].sort_values(by='inicio')
@@ -36,21 +35,26 @@ def monta_agenda(df, dia, agenda):
     id_atual = atual['id'].values[0]
     df = df.loc[df['id'] != id_atual]
 
-    if len(df) > 0:
+    if len(df) > 0 and len(agenda) < 4:
         inicio = atual['inicio'].values[0]
         fim = atual['fim'].values[0]
 
         sem_choque = df.loc[df['inicio'] > fim ]
         if len(sem_choque) > 0:
-            combos.append(monta_agenda(sem_choque, dia, agenda + [id_atual]))
+            nova_agenda = monta_agenda(sem_choque, dia, agenda + [id_atual])
+            if nova_agenda:
+                combos.append(nova_agenda)
 
         # tratar demais
         com_choque = df.loc[((df['inicio'] >= inicio) & (df['inicio'] <= fim )) | \
                             ((df['fim'] >= inicio) & (df['fim'] <= fim ))]
         if len(com_choque) > 0:
-            combos.append(monta_agenda(df, dia, agenda))
+            nova_agenda = monta_agenda(df, dia, agenda)
+            if nova_agenda:
+                combos.append(nova_agenda)
 
     else:
+        nova_agenda = agenda + [id_atual]
         return agenda + [id_atual]
         
 
@@ -66,6 +70,14 @@ df['inicio'] = pd.to_datetime(df['inicio']).dt.time
 df['fim'] = pd.to_datetime(df['fim']).dt.time
 df = df.loc[~(df['inicio'].isnull() | df['fim'].isnull())]
 df.loc[df['fim'] == pd.to_datetime('00:00:00').time(), 'fim'] = pd.to_datetime('23:59:59').time()
+
+#%%
+len(df)
+df = df.loc[df['mentoria'] == 0]
+df = df.loc[df['acesso'] < 1]
+df['duracao'] = df.apply(lambda x: horario_em_mins(x['fim']) - horario_em_mins(x['inicio']), axis=1)
+df = df.loc[(df['duracao'] >= 30) & (df['duracao'] <= 180)]
+len(df)
 
 #%%
 dias = [x for x in list(set(df['dia'])) if str(x) != 'nan']
