@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import itertools
 import math
+import copy
+from multiprocessing.dummy import Pool as ThreadPool
+
 
 
 #%%
@@ -26,10 +29,34 @@ def max_min(valor, minimo, maximo):
     return novo_valor
 
 
+# monta as combinacoes de agenda recursivamente
+def monta_agenda(df, dia, agenda):
+    df = df.loc[df['dia'] == dia].sort_values(by='inicio')
+    atual = df.head(1)
+    id_atual = atual['id'].values[0]
+    df = df.loc[df['id'] != id_atual]
+
+    if len(df) > 0:
+        inicio = atual['inicio'].values[0]
+        fim = atual['fim'].values[0]
+
+        sem_choque = df.loc[df['inicio'] > fim ]
+        if len(sem_choque) > 0:
+            combos.append(monta_agenda(sem_choque, dia, agenda + [id_atual]))
+
+        # tratar demais
+        com_choque = df.loc[((df['inicio'] >= inicio) & (df['inicio'] <= fim )) | \
+                            ((df['fim'] >= inicio) & (df['fim'] <= fim ))]
+        if len(com_choque) > 0:
+            combos.append(monta_agenda(df, dia, agenda))
+
+    else:
+        return agenda + [id_atual]
+        
+
 #%%
 ENTRADA = 'prioridade_mourao.csv'
 SAIDA = 'selecao_mourao.csv'
-SAIDA2 = 'selecao_alternativa_mourao.csv'
 
 #%%
 df = pd.read_csv('dados/' + ENTRADA, sep='|')
@@ -37,10 +64,21 @@ df = pd.read_csv('dados/' + ENTRADA, sep='|')
 #%%
 df['inicio'] = pd.to_datetime(df['inicio']).dt.time
 df['fim'] = pd.to_datetime(df['fim']).dt.time
+df = df.loc[~(df['inicio'].isnull() | df['fim'].isnull())]
+df.loc[df['fim'] == pd.to_datetime('00:00:00').time(), 'fim'] = pd.to_datetime('23:59:59').time()
 
 #%%
 dias = [x for x in list(set(df['dia'])) if str(x) != 'nan']
 print(dias)
+
+#%%
+ls = []
+for dia in dias:
+    print(dia)
+    combos = []
+    monta_agenda(df, dia, [])
+    ls.append({'dia' : dia, 'combos': copy.copy(combos)})
+
 
 #%%
 ls_tudo = []
