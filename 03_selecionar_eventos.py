@@ -1,7 +1,6 @@
 #%% importa bibliotecas
 import pandas as pd
 import numpy as np
-import math
 import copy
 from multiprocessing import Manager, Pool
 from functools import partial
@@ -26,29 +25,58 @@ def max_min(valor, minimo, maximo):
 
 #%% monta as combinacoes de agenda recursivamente
 def monta_agenda(dia, df, agenda, combos):
-    df = df.loc[df['dia'] == dia].sort_values(by='inicio')
-    atual = df.head(1)
-    id_atual = atual['id'].values[0]
-    df_sem = df.loc[df['id'] != id_atual]
+    df2 = df.loc[df['dia'] == dia].sort_values(by='inicio')
+    atual = df2.head(1).to_dict('r')[0]
+    df2 = df2.loc[df2['id'] != atual['id']]
 
-    if len(df_sem) > 0 and len(agenda) < 3:
-        inicio = atual['inicio'].values[0]
-        fim = atual['fim'].values[0]
+    if len(df2) > 0 and len(agenda) < 2:
+        inicio = atual['inicio']
+        fim = atual['fim']
 
-        sem_choque = df_sem.loc[df_sem['inicio'] > fim ]
+        sem_choque = df2.loc[df2['inicio'] > fim ]
         if len(sem_choque) > 0:
-            monta_agenda(dia, sem_choque, agenda + [id_atual], combos)
+            monta_agenda(dia, sem_choque, agenda + [atual], combos)
 
         # tratar demais
-        com_choque = df_sem.loc[((df_sem['inicio'] >= inicio) & (df_sem['inicio'] <= fim )) | \
-                            ((df_sem['fim'] >= inicio) & (df_sem['fim'] <= fim ))]
+        com_choque = df2.loc[((df2['inicio'] >= inicio) & (df2['inicio'] <= fim )) | \
+                            ((df2['fim'] >= inicio) & (df2['fim'] <= fim ))]
         if len(com_choque) > 0:
-            monta_agenda(dia, df_sem, agenda, combos)
+            monta_agenda(dia, df2, agenda, combos)
 
     else:
-        nova_agenda = agenda + [id_atual]
-        combos.append({ 'dia' : dia , 'combos' : nova_agenda })
+        nova_agenda = agenda + [atual]
+        prioridade, acesso, distancia = calcula_custos(nova_agenda)
+        combos.append({ 'dia' : dia , 
+                        'combos' : nova_agenda,
+                        'prioridade' : prioridade,
+                        'acesso' : acesso,
+                        'distancia' : distancia })
         
+
+#%% calcula custos, retornando soma das prioridades, 
+#   das distancias e dos acessos
+def calcula_custos(agenda):
+    from math import sqrt
+
+    df = pd.DataFrame(agenda)
+    ordenado = df.sort_values(by='inicio')
+    prioridade = 0
+    acesso = 0
+    distancia = 0
+    u_ix = None
+    for ix, linha in ordenado.iterrows():
+        prioridade += linha['prioridade']
+        acesso += linha['acesso']
+
+        if u_ix:
+            distancia = sqrt((linha['latitude'] - 
+                              ordenado.loc[u_ix, 'latitude'])**2 + 
+                             (linha['longitude'] - 
+                             ordenado.loc[u_ix, 'longitude'])**2)
+            distancia += distancia
+        u_ix = ix
+    return (prioridade, acesso, distancia)
+
 
 #%% constantes
 ENTRADA = 'prioridade_mourao.csv'
@@ -86,16 +114,17 @@ print(dias)
 
 #%% montar combinacoes possiveis
 
-# cria lista que pode ser vista por todos os processos
-manager = Manager()
-combos = manager.list()
-
-# executa a montagem das possibilidades, dividindo o trabalho
-# em processos
-with Pool(processes=3,) as pool:
-    pool.map(partial(monta_agenda, df=df, agenda=[], combos=combos), dias)
+# # cria lista que pode ser vista por todos os processos
+# manager = Manager()
+# combos = manager.list()
+# # executa a montagem das possibilidades, dividindo o trabalho
+# # em processos
+# with Pool(processes=3,) as pool:
+#     pool.map(partial(monta_agenda, df=df, agenda=[], combos=combos), dias)
 
 # salva as combinacoes em um dataframe pandas    
+combos = []
+monta_agenda(dia=8, df=df, agenda=[], combos=combos)
 df_combos = pd.DataFrame(list(combos))
 
 #%% 
@@ -104,3 +133,4 @@ len(df_combos)
 
 #%%
 df_combos.to_csv('dados/combos.csv', index=False)
+
