@@ -25,7 +25,8 @@ def max_min(valor, minimo, maximo):
 def monta_agenda(dia, df, agenda, combos):
     df2 = df.loc[df['dia'] == dia].sort_values(by='inicio')
     # seleciona proximo evento a ser inserido na agenda
-    atual = df2.head(1).to_dict('r')[0]
+    colunas = ['id', 'inicio', 'fim', 'prioridade', 'acesso', 'latitude', 'longitude']
+    atual = df2[colunas].head(1).to_dict('r')[0]
     df2 = df2.loc[df2['id'] != atual['id']]
     # verifica se ha ainda eventos para compor agenda 
     # ou se a agenda encontra-se cheia
@@ -113,7 +114,7 @@ manager = Manager()
 combos = manager.list()
 # executa a montagem das possibilidades, dividindo o trabalho
 # em processos
-cpus = cpu_count() - 1 # deixa uma cpu livre para o sistema operacional
+cpus = cpu_count() - 2 # deixa uma cpu livre para o sistema operacional
 with Pool(processes=cpus,) as pool:
     pool.map(partial(monta_agenda, df=df, agenda=[], combos=combos), dias)
 # salva as combinacoes em um dataframe pandas    
