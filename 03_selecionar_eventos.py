@@ -114,7 +114,7 @@ manager = Manager()
 combos = manager.list()
 # executa a montagem das possibilidades, dividindo o trabalho
 # em processos
-cpus = cpu_count() - 2 # deixa uma cpu livre para o sistema operacional
+cpus = cpu_count() - 2 # deixa duas cpus livres para o sistema operacional
 with Pool(processes=cpus,) as pool:
     pool.map(partial(monta_agenda, df=df, agenda=[], combos=combos), dias)
 # salva as combinacoes em um dataframe pandas    
