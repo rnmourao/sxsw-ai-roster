@@ -148,6 +148,6 @@ df_combos['custo'] = df_combos['prioridade'] + \
 #%% ordenar pelo custo e selecionar primeira opcao de cada dia
 df_combos.sort_values(by='custo', inplace=True)
 selecao = df_combos.groupby(by=['dia'], as_index=False).first()
-selecao
+print(selecao)
 
 
