@@ -30,7 +30,7 @@ def monta_agenda(dia, df, agenda, combos):
     df2 = df2.loc[df2['id'] != atual['id']]
     # verifica se ha ainda eventos para compor agenda 
     # ou se a agenda encontra-se cheia
-    if len(df2) > 0 and len(agenda) < 3:
+    if len(df2) > 0 and len(agenda) < 2:
         inicio = atual['inicio']
         fim = atual['fim']
         # identifica eventos que nao chocam com o evento atual
@@ -46,11 +46,12 @@ def monta_agenda(dia, df, agenda, combos):
     else:
         # encerra a composicao da agenda e calcula custos da agenda proposta
         nova_agenda = agenda + [atual]
-        prioridade, acesso, distancia = calcula_custos(nova_agenda)
+        prioridade, acesso, quantidade, distancia = calcula_custos(nova_agenda)
         combos.append({ 'dia' : dia , 
                         'combos' : nova_agenda,
                         'prioridade' : prioridade,
                         'acesso' : acesso,
+                        'quantidade' : quantidade,
                         'distancia' : distancia })
         
 
@@ -62,11 +63,13 @@ def calcula_custos(agenda):
     ordenado = df.sort_values(by='inicio')
     prioridade = 0
     acesso = 0
+    quantidade = 0
     distancia = 0
     u_ix = None
     for ix, linha in ordenado.iterrows():
         prioridade += linha['prioridade']
         acesso += linha['acesso']
+        quantidade += 1
         if u_ix:
             # distancia euclideana
             distancia = sqrt((linha['latitude'] - \
@@ -75,7 +78,18 @@ def calcula_custos(agenda):
                              ordenado.loc[u_ix, 'longitude'])**2)
             distancia += distancia
         u_ix = ix
-    return (prioridade, acesso, distancia)
+    quantidade = 1.0 / quantidade
+    return (prioridade, acesso, quantidade, distancia)
+
+
+#%%
+def monta_agenda(df, selecao):
+    ids = []
+    for ix, linha in selecao.iterrows():
+        for ls in linha['combos']:
+            ids.append(ls['id']) 
+    agenda = df.loc[df['id'].isin(ids)]
+    return agenda.sort_values(by=['dia', 'inicio'])
 
 
 #%% constantes
@@ -129,6 +143,10 @@ minimo, maximo = (df_combos['acesso'].min(), df_combos['acesso'].max())
 df_combos['acesso'] = df_combos.apply(lambda x : \
                                       max_min(x['acesso'], minimo, maximo), 
                                       axis=1)
+minimo, maximo = (df_combos['quantidade'].min(), df_combos['quantidade'].max())
+df_combos['quantidade'] = df_combos.apply(lambda x : \
+                                      max_min(x['quantidade'], minimo, maximo), 
+                                      axis=1)                                      
 minimo, maximo = (df_combos['distancia'].min(), df_combos['distancia'].max())
 df_combos['distancia'] = df_combos.apply(lambda x : \
                                          max_min(x['distancia'], minimo, maximo), 
@@ -143,11 +161,14 @@ df_combos.to_pickle('dados/' + COMBOS)
 #%% calcula custo total
 df_combos['custo'] = df_combos['prioridade'] + \
                      df_combos['acesso'] + \
+                     df_combos['quantidade'] + \
                      df_combos['distancia']
 
 #%% ordenar pelo custo e selecionar primeira opcao de cada dia
 df_combos.sort_values(by='custo', inplace=True)
 selecao = df_combos.groupby(by=['dia'], as_index=False).first()
-print(selecao)
 
-
+#%%
+minha_agenda = monta_agenda(df, selecao)
+minha_agenda.to_csv('dados/'+ SAIDA, index=False, sep='|')
+minha_agenda

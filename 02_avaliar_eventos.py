@@ -113,8 +113,8 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
 #%%
 # Constantes
-ENTRADA = 'eventos_mourao.xlsx'
-SAIDA = 'prioridade_mourao.csv'
+ENTRADA = 'eventos_maurilio.xlsx'
+SAIDA = 'prioridade_maurilio.csv'
 
 
 #%%
@@ -143,7 +143,7 @@ len(base)
 
 #%%
 ## separar em treino e teste
-treino, teste = train_test_split(base, random_state=2019, test_size=.1)
+treino, teste = train_test_split(base, random_state=2019, test_size=.3)
 
 #%%
 explicativas = [x for x in df3.columns if x not in  ['id', 'target']]
