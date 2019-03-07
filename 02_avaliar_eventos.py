@@ -143,13 +143,13 @@ len(base)
 
 #%%
 ## separar em treino e teste
-treino, teste = train_test_split(base, random_state=2019, test_size=.1)
+treino, teste = train_test_split(base, random_state=2019, test_size=.3)
 
 #%%
 explicativas = [x for x in df3.columns if x not in  ['id', 'target']]
 
 #%%
-regr = RandomForestRegressor(n_estimators=3, random_state=2019)
+regr = RandomForestRegressor(n_estimators=20, random_state=2019)
 regr.fit(treino[explicativas], treino['target'])
 
 
