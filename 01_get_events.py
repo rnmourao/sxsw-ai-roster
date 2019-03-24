@@ -35,8 +35,8 @@ def get_events_list(url):
     # pt: encontra trechos com a descricao dos events
     events = page.find_all('div', class_='single-event')
 
-    # en:
-    # pt: percorre a lista, obtendo detalhes dos events
+    # en: iterate the list, getting the events' details
+    # pt: percorre a lista, obtendo detalhes dos eventos
     ls = []
     for event in events:
         ls.append('https://schedule.sxsw.com' + event['data-event-url'])

@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import make_pipeline
-# nltk.download('stopwords')
+nltk.download('stopwords')
 
 
 #%%
