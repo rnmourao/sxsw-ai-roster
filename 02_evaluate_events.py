@@ -15,93 +15,73 @@ nltk.download('stopwords')
 
 
 #%%
-# criar preprocessamento inicial
+# standardizes the event ranking variable (target). Simplifies the text found in the events' title and abstract.
 class Pre_Pro_01(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
 
+    # finds the values used to standardization.
     def fit(self, df, y=None, **fit_params):
-        "Encontra valores necessarios para transformacoes."
-
-        # dados para normalizacao
-        self.target_minimo = df['target'].min()
-        self.target_maximo = df['target'].max()
+        self.target_min = df['target'].min()
+        self.target_max = df['target'].max()
         return self
 
+    # applies transformations.
     def transform(self, df):
-        "Aplica transformacoes."
-
-        # normalizar alvo
         df['target'] = df.apply(lambda x : self._max_min(x['target']), axis=1)
-
-        # unificar campos nome do evento e resumo
-        df['texto'] = df['evento'] + ' ' +  df['resumo']
-        
-        # efetuar limpeza do texto
-        df['texto'] = df.apply(lambda x : self.limpar_texto(x['texto']), axis=1)
-
-        # devolver somente colunas que serao usadas
-        df = df[['id', 'texto', 'target']]
-        
+        df['text'] = df['event'] + ' ' +  df['abstract']
+        df['text'] = df.apply(lambda x : self.clean_text(x['text']), axis=1)
+        df = df[['id', 'text', 'target']]
         return df
 
-    def _max_min(self, valor):
-        novo_valor = None
+    # standardization function
+    def _max_min(self, value):
+        new_value = None
 
-        if valor:
-            novo_valor = (valor - self.target_minimo) / (self.target_maximo - self.target_minimo)
+        if value is not None:
+            new_value = (value - self.target_min) / (self.target_max - self.target_min)
         
-        return novo_valor
+        return new_value
 
-    def limpar_texto(self, texto):
-        # forcar formato
-        texto = str(texto)
-
-        # caixa baixa
-        texto = texto.lower()
-
-        # tirar espacos duplos
-        texto = gensim.corpora.textcorpus.strip_multiple_whitespaces(texto)
-        
-        # remover pontuacao
-        texto = gensim.parsing.preprocessing.strip_punctuation(texto)
-        
-        # retirar numeros
-        texto = gensim.parsing.preprocessing.strip_numeric(texto)
-        
-        # tirar radicais
-        texto = gensim.parsing.preprocessing.stem_text(texto)
-
-        # remove stop words
+    # function to clean a text
+    def clean_text(self, text):
+        text = str(text)
+        text = text.lower()
+        text = gensim.corpora.textcorpus.strip_multiple_whitespaces(text)
+        text = gensim.parsing.preprocessing.strip_punctuation(text)
+        text = gensim.parsing.preprocessing.strip_numeric(text)
+        text = gensim.parsing.preprocessing.stem_text(text)
         stops = set(stopwords.words("english"))
         stops.add('sxsw')
         stops.add('rsvp')
-        ls_texto = [palavra for palavra in texto.split() if palavra not in stops]
-
-        return ls_texto
+        ls_text = [word for word in text.split() if word not in stops]
+        return ls_text
 
 
 #%%
-# transformacao tf-idf
+# transforms text in a word's frequency table, using tf-idf algorithm
 class Pre_Pro_02(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
 
+    # generates a frequency table based on all the words found in the events
     def fit(self, df, y=None, **fit_params):
         from gensim.models import TfidfModel
 
-        lista_textos = df['texto'].tolist()
-        self.dic = Dictionary(lista_textos)
-        corpus = [self.dic.doc2bow(linha) for linha in lista_textos]
+        ls_texts = df['text'].tolist()
+        self.dic = Dictionary(ls_texts)
+        corpus = [self.dic.doc2bow(row) for row in ls_texts]
         self.tf_idf = TfidfModel(corpus)
 
+
+    # converts the text of each event into its frequencies
     def transform(self, df):
-        df['tfidf'] = df.apply(lambda x : self.tf_idf[self.dic.doc2bow(x['texto'])], axis=1)
+        df['tfidf'] = df.apply(lambda x : self.tf_idf[self.dic.doc2bow(x['text'])], axis=1)
 
         ls = []
-        for ix, linha in df.iterrows():
-            d = {'id': linha.id, 'target': linha.target}
-            for token in linha.tfidf:
+        for ix, row in df.iterrows():
+            d = {'id': row.id, 'target': row.target}
+            for token in row.tfidf:
                 d['t_' + str(token[0])] = token[1]
             ls.append(d)
         df = pd.DataFrame(ls)
@@ -112,79 +92,72 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
 
 #%%
-# Constantes
-ENTRADA = 'eventos_mourao.xlsx'
-SAIDA = 'prioridade_mourao.csv'
-
-
-#%%
-# recuperar arquivo xlsx
-df = pd.read_excel('dados/' + ENTRADA, index_col=None)
-
+# filenames
+IN = 'events_mourao.xlsx'
+OUT = 'rank_mourao.csv'
 
 #%%
-# preparacao da variavel target e do texto
-pre_pro_01 = Pre_Pro_01()
-pre_pro_01.fit(df=df)
-df2 = pre_pro_01.transform(df)
-df2.head()
+# gets ranked events
+df = pd.read_excel('data/' + IN, index_col=None)
 
 #%%
-# vetorizacao do texto com tf-idf
-pre_pro_02 = Pre_Pro_02()
-pre_pro_02.fit(df=df2)
-df3 = pre_pro_02.transform(df2)
-df3.head()
+# does the data preparation
+text_prep = Pipeline([
+                      ('clean', Pre_Pro_01),
+                      ('freq', Pre_Pro_02)
+                     ])
+freqs = text_prep.fit_transform(df)
 
 #%%
-# separar base para criação do modelo
-base = df3.loc[df3.target > 0]
-len(base)
+# selects data to use in the learning step
+data = freqs.loc[freqs.target > 0]
+len(data)
 
 #%%
-## separar em treino e teste
-treino, teste = train_test_split(base, random_state=2019, test_size=.3)
+## splits data in train and test sets
+train, test = train_test_split(data, random_state=2019, test_size=.3)
 
 #%%
-explicativas = [x for x in df3.columns if x not in  ['id', 'target']]
+# explanatory variables
+attributes = [x for x in freqs.columns if x not in  ['id', 'target']]
 
 #%%
+# trains the model using Random Forest algorithm
 regr = RandomForestRegressor(n_estimators=20, random_state=2019)
-regr.fit(treino[explicativas], treino['target'])
+regr.fit(train[attributes], train['target'])
+
+#%%
+# shows the training score
+regr.score(train[attributes], train['target'])
 
 
 #%%
-regr.score(treino[explicativas], treino['target'])
+# shows the test score
+regr.score(test[attributes], test['target'])
 
 
 #%%
-regr.score(teste[explicativas], teste['target'])
+# uses the model to rank the events
+new_cases =  freqs.loc[ freqs.target == 0]
+predictions = regr.predict(new_cases[attributes])
 
 
 #%%
-casos_novos = df3.loc[df3.target == 0]
-predicoes = regr.predict(casos_novos[explicativas])
-
-
-#%%
-casos_novos['target'] = predicoes
-casos_novos[['id', 'target']]
-
+# creates a new dataframe joining the user's ranked events with the predicted ones
+new_cases['target'] = predictions
+predicted = base[['id', 'target']].append(new_cases[['id', 'target']]) 
+predicted.columns = ['id', 'rank']
+predicted.head()
 
 #%%
-# saida com predicoes
-preditos = base[['id', 'target']].append(casos_novos[['id', 'target']]) 
-preditos.columns = ['id', 'prioridade']
-preditos.head()
+# merges the predictions with the original dataframe
+df = df.merge(predicted, on='id')
+df.head()
 
 #%%
-df4 = df.merge(preditos, on='id')
-df4.head()
-
-#%%
-df5 = df4[['id', 'evento', 'target', 'prioridade', 'acesso', 'mentoria', 'local', 
-           'endereco', 'dia', 'inicio', 'fim', 'latitude', 'longitude', 'resumo']]
-df5.sort_values(by='prioridade', inplace=True)
-
-df5.to_csv('dados/' + SAIDA, index=False, sep='|')
+# selects the useful attributes
+df = df[['id', 'event', 'target', 'rank', 'access', 'is_mentor', 'place', 
+           'address', 'day', 'start', 'end', 'latitude', 'longitude', 'abstract']]
+df.sort_values(by='rank', inplace=True)
+df.to_csv('data/' + OUT, index=False, sep='|')
 
