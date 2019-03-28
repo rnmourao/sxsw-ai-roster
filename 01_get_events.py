@@ -100,7 +100,6 @@ def get_event_details(url):
             al = get_access_level(page.find(text=tp[0]).parent.parent.text)
             if al:
                 access_level = tp[1]
-                print(tp[0])
         except:
             pass
 
