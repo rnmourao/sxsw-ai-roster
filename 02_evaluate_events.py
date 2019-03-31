@@ -10,7 +10,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline
 nltk.download('stopwords')
 
 
@@ -94,11 +94,11 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
 #%%
 # filenames
-IN = 'events_mourao.xlsx'
-OUT = 'rank_mourao.csv'
+IN = 'events.xlsx'
+OUT = 'ranking.csv'
 
 #%%
-# gets ranked events
+# gets events
 df = pd.read_excel('data/' + IN, index_col=None)
 
 #%%
