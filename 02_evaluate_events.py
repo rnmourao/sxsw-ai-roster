@@ -86,7 +86,8 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
             ls.append(d)
         df = pd.DataFrame(ls)
 
-        df = df.fillna(0)
+        features = [x for x in df.columns if x not in ['id', 'target']]
+        df[features] = df[features].fillna(0)
 
         return df
 
@@ -110,7 +111,7 @@ freqs = text_prep.fit_transform(df)
 
 #%%
 # selects data to use in the learning step
-data = freqs.loc[freqs.target > 0]
+data = freqs.loc[freqs['target'].notnull()]
 len(data)
 
 #%%
@@ -119,27 +120,27 @@ train, test = train_test_split(data, random_state=2019, test_size=.3)
 
 #%%
 # explanatory variables
-attributes = [x for x in freqs.columns if x not in  ['id', 'target']]
+features = [x for x in freqs.columns if x not in  ['id', 'target']]
 
 #%%
 # trains the model using Random Forest algorithm
 regr = RandomForestRegressor(n_estimators=20, random_state=2019)
-regr.fit(train[attributes], train['target'])
+regr.fit(train[features], train['target'])
 
 #%%
 # shows the training score
-regr.score(train[attributes], train['target'])
+regr.score(train[features], train['target'])
 
 
 #%%
 # shows the test score
-regr.score(test[attributes], test['target'])
+regr.score(test[features], test['target'])
 
 
 #%%
 # uses the model to rank the events
-new_cases =  freqs.loc[ freqs.target == 0]
-predictions = regr.predict(new_cases[attributes])
+new_cases =  freqs.loc[ freqs['target'].isnull()]
+predictions = regr.predict(new_cases[features])
 
 
 #%%
