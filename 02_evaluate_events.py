@@ -103,11 +103,9 @@ df = pd.read_excel('data/' + IN, index_col=None)
 
 #%%
 # does the data preparation
-text_prep = Pipeline([
-                      ('clean', Pre_Pro_01()),
-                      ('freq', Pre_Pro_02())
-                     ])
-text_prep.fit(df)
+text_prep = Pipeline([ ('clean', Pre_Pro_01()),
+                  ('freq', Pre_Pro_02())
+                ]).fit(df)
 freqs = text_prep.transform(df)
 
 
