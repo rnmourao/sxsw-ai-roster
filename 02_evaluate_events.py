@@ -29,7 +29,7 @@ class Pre_Pro_01(BaseEstimator, TransformerMixin):
     # applies transformations.
     def transform(self, df):
         df['target'] = df.apply(lambda x : self._max_min(x['target']), axis=1)
-        df['text'] = df['event'] + ' ' +  df['abstract']
+        df['text'] = df['event'].fillna('') + ' ' + df['abstract'].fillna('')
         df['text'] = df.apply(lambda x : self.clean_text(x['text']), axis=1)
         df = df[['id', 'text', 'target']]
         return df
@@ -84,12 +84,12 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
             for token in row.tfidf:
                 d['t_' + str(token[0])] = token[1]
             ls.append(d)
-        df = pd.DataFrame(ls)
+        new_df = pd.DataFrame(ls)
 
-        features = [x for x in df.columns if x not in ['id', 'target']]
-        df[features] = df[features].fillna(0)
+        features = [x for x in new_df.columns if x not in ['id', 'target']]
+        new_df[features] = new_df[features].fillna(0)
 
-        return df
+        return new_df
 
 
 #%%
@@ -104,10 +104,12 @@ df = pd.read_excel('data/' + IN, index_col=None)
 #%%
 # does the data preparation
 text_prep = Pipeline([
-                      ('clean', Pre_Pro_01),
-                      ('freq', Pre_Pro_02)
+                      ('clean', Pre_Pro_01()),
+                      ('freq', Pre_Pro_02())
                      ])
-freqs = text_prep.fit_transform(df)
+text_prep.fit(df)
+freqs = text_prep.transform(df)
+
 
 #%%
 # selects data to use in the learning step
@@ -131,22 +133,19 @@ regr.fit(train[features], train['target'])
 # shows the training score
 regr.score(train[features], train['target'])
 
-
 #%%
 # shows the test score
 regr.score(test[features], test['target'])
-
 
 #%%
 # uses the model to rank the events
 new_cases =  freqs.loc[ freqs['target'].isnull()]
 predictions = regr.predict(new_cases[features])
 
-
 #%%
 # creates a new dataframe joining the user's ranked events with the predicted ones
 new_cases['target'] = predictions
-predicted = base[['id', 'target']].append(new_cases[['id', 'target']]) 
+predicted = data[['id', 'target']].append(new_cases[['id', 'target']]) 
 predicted.columns = ['id', 'rank']
 predicted.head()
 
