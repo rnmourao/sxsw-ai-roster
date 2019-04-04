@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project aimed to help a team of BancodoBrasil employees to select which lectures they should attend. The team was composed by a Data Scientist and an Innovation Specialist and had the objective of increasing knowledge and capturing new perspectives that could contribute to the planning of innovative solutions for Banco do Brasil.
+This project aimed to help a team of Banco do Brasil employees to select which lectures they should attend. The team was composed by a Data Scientist and an Innovation Specialist and had the objective of increasing knowledge and capturing new perspectives that could contribute to the planning of innovative solutions for Banco do Brasil.
 
 The South by Southwest Conference & Festivals takes place in Austin, Texas, and in 2019 occurred between March 8 and 17. It featured more than 6,000 events, including lectures, shows, movies, etc.
 
