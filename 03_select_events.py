@@ -22,7 +22,7 @@ def has_overbooking(a, b):
 
 
 # standardizes values in a 0 to 1 range
-def max_min(_value, v_min, v_max):
+def max_min(value, v_min, v_max):
     new_value = None
 
     if value is not None:
@@ -87,7 +87,6 @@ schedule = []
 for day in days:
     for shift in shifts:
         schedule.append({'day': day, 'start': shift[0], 'end': shift[1]})
-print(schedule)
 
 #%% divides the scheduling trials between processes
 cpus = cpu_count() - 2
@@ -120,12 +119,16 @@ df_combos.to_csv('data/' + OUT, sep='|', index=False)
 #%% first schedule
 primary = df_combos.groupby(by=['day', 'start']).first()
 df_primary = df.loc[df['id'].isin(primary['event_1'].tolist() + primary['event_2'].tolist())]
+df_primary.sort_values(by=['day', 'start'], inplace=True)
 df_primary.to_csv('data/' + OUT, sep='|', index=False)
-print(df_primary)
+print('\n\n==== Primary Schedule ====\n')
+print(df_primary[['day', 'start', 'end', 'place', 'event']])
 
 #%% second schedule
 exclude = list(primary['event_1']) + list(primary['event_2'])
 alternative = df_combos[(~df_combos['event_1'].isin(exclude)) & (~df_combos['event_2'].isin(exclude))].groupby(by=['day', 'start']).first()
 df_alternative = df.loc[df['id'].isin(alternative['event_1'].tolist() + alternative['event_2'].tolist())]
+df_alternative.sort_values(by=['day', 'start'], inplace=True)
 df_alternative.to_csv('data/' + OUT2, sep='|', index=False)
-print(df_alternative)
+print('\n\n==== Alternative Schedule ====\n')
+print(df_alternative[['day', 'start', 'end', 'place', 'event']])
