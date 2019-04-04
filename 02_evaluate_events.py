@@ -9,8 +9,8 @@ from gensim.corpora import Dictionary
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.model_selection import train_test_split
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestRegressor
 nltk.download('stopwords')
 
 
@@ -28,11 +28,12 @@ class Pre_Pro_01(BaseEstimator, TransformerMixin):
 
     # applies transformations.
     def transform(self, df):
-        df['target'] = df.apply(lambda x : self._max_min(x['target']), axis=1)
-        df['text'] = df['event'].fillna('') + ' ' + df['abstract'].fillna('')
-        df['text'] = df.apply(lambda x : self.clean_text(x['text']), axis=1)
-        df = df[['id', 'text', 'target']]
-        return df
+        dft = df.copy()
+        dft['target'] = dft.apply(lambda x : self._max_min(x['target']), axis=1)
+        dft['text'] = dft['event'].fillna('') + ' ' + dft['abstract'].fillna('')
+        dft['text'] = dft.apply(lambda x : self.clean_text(x['text']), axis=1)
+        dft = dft[['id', 'text', 'target']]
+        return dft
 
     # standardization function
     def _max_min(self, value):
@@ -76,20 +77,21 @@ class Pre_Pro_02(BaseEstimator, TransformerMixin):
 
     # converts the text of each event into its frequencies
     def transform(self, df):
-        df['tfidf'] = df.apply(lambda x : self.tf_idf[self.dic.doc2bow(x['text'])], axis=1)
+        dft = df.copy()
+        dft['tfidf'] = dft.apply(lambda x : self.tf_idf[self.dic.doc2bow(x['text'])], axis=1)
 
         ls = []
-        for ix, row in df.iterrows():
+        for ix, row in dft.iterrows():
             d = {'id': row.id, 'target': row.target}
             for token in row.tfidf:
                 d['t_' + str(token[0])] = token[1]
             ls.append(d)
-        new_df = pd.DataFrame(ls)
+        dft = pd.DataFrame(ls)
 
-        features = [x for x in new_df.columns if x not in ['id', 'target']]
-        new_df[features] = new_df[features].fillna(0)
+        features = [x for x in dft.columns if x not in ['id', 'target']]
+        dft[features] = dft[features].fillna(0)
 
-        return new_df
+        return dft
 
 
 #%%
@@ -108,10 +110,9 @@ text_prep = Pipeline([ ('clean', Pre_Pro_01()),
                 ]).fit(df)
 freqs = text_prep.transform(df)
 
-
 #%%
 # selects data to use in the learning step
-data = freqs.loc[freqs['target'].notnull()]
+data = freqs    .loc[freqs['target'].notnull()]
 len(data)
 
 #%%
@@ -137,7 +138,7 @@ regr.score(test[features], test['target'])
 
 #%%
 # uses the model to rank the events
-new_cases =  freqs.loc[ freqs['target'].isnull()]
+new_cases =  freqs.loc[ freqs['target'].isnull()].copy()
 predictions = regr.predict(new_cases[features])
 
 #%%
@@ -145,12 +146,10 @@ predictions = regr.predict(new_cases[features])
 new_cases['target'] = predictions
 predicted = data[['id', 'target']].append(new_cases[['id', 'target']]) 
 predicted.columns = ['id', 'rank']
-predicted.head()
 
 #%%
 # merges the predictions with the original dataframe
 df = df.merge(predicted, on='id')
-df.head()
 
 #%%
 # selects the useful attributes
