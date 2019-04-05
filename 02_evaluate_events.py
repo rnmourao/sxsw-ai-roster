@@ -112,7 +112,7 @@ freqs = text_prep.transform(df)
 
 #%%
 # selects data to use in the learning step
-data = freqs    .loc[freqs['target'].notnull()]
+data = freqs.loc[freqs['target'].notnull()]
 len(data)
 
 #%%
